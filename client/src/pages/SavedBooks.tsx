@@ -4,21 +4,23 @@ import { useQuery, useMutation } from '@apollo/client';
 // import { deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
-import { GET_ME } from '../utils/queries';
+import { GET_SINGLE_USER } from '../utils/queries';
 import { REMOVE_BOOK } from '../utils/mutations';
 import type { User } from '../models/User';
 
 
 const SavedBooks = () => {
-  const { loading, data } = useQuery(GET_ME);
-  const userData: User = data.me || {
+  const { loading, data } = useQuery(GET_SINGLE_USER);
+  const userData: User = data?.getSingleUser || {
     username: '',
     email: '',
     password: '',
     savedBooks: [],
   };
 
-  const [deleteBook] = useMutation(REMOVE_BOOK);
+  const [deleteBook] = useMutation(REMOVE_BOOK,{
+    refetchQueries:[GET_SINGLE_USER]
+  });
 
   // use this to determine if `useEffect()` hook needs to run again
 
